@@ -15,14 +15,6 @@ This project is a C++ client that connects to the ABX mock exchange server over 
   - Sequence number
 - Outputs all received packets to `packets.json`
 
-## 🛠 Technologies
-
-- C++ (Tested on Linux)
-- POSIX sockets
-- [nlohmann/json](https://github.com/nlohmann/json) for JSON output
-
-## 🚀 Getting Started
-
 ### Prerequisites
 
 - g++ (Linux or MinGW on Windows)
@@ -31,7 +23,17 @@ This project is a C++ client that connects to the ABX mock exchange server over 
 
 ### Run ABX Exchange Server
 
-1. Extract `abx_exchange_server.zip`
-2. Start the server:
-   ```bash
-   node main.js
+1.Start the server:
+   Go to the file where project is stored and open command prompt run the code : node main.js
+2.For Windows: go to the file where project is stored and open command prompt run the code :
+   g++ client.cpp -o client.exe -lws2_32 
+   it will compile the client.cpp code.
+   again run this code : client.exe  
+   it will generate a packet.json file which contain the received packet from the server.
+
+3.For Linux: go to the file where project is stored and open command prompt run the code :
+   g++ client.cpp -o client -std=c++11
+   it will compile the client.cpp code.
+   again run this code : ./abx_client  
+   it will generate a packet.json file which contain the received packet from the server.
+
