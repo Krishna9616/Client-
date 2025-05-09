@@ -1,0 +1,100 @@
+[
+    {
+        "buySellIndicator": "B",
+        "packetSequence": 1,
+        "price": 100,
+        "quantity": 50,
+        "symbol": "AAPL"
+    },
+    {
+        "buySellIndicator": "B",
+        "packetSequence": 2,
+        "price": 98,
+        "quantity": 30,
+        "symbol": "AAPL"
+    },
+    {
+        "buySellIndicator": "S",
+        "packetSequence": 3,
+        "price": 101,
+        "quantity": 20,
+        "symbol": "AAPL"
+    },
+    {
+        "buySellIndicator": "S",
+        "packetSequence": 4,
+        "price": 102,
+        "quantity": 10,
+        "symbol": "AAPL"
+    },
+    {
+        "buySellIndicator": "B",
+        "packetSequence": 5,
+        "price": 50,
+        "quantity": 40,
+        "symbol": "META"
+    },
+    {
+        "buySellIndicator": "S",
+        "packetSequence": 6,
+        "price": 55,
+        "quantity": 30,
+        "symbol": "META"
+    },
+    {
+        "buySellIndicator": "S",
+        "packetSequence": 7,
+        "price": 57,
+        "quantity": 20,
+        "symbol": "META"
+    },
+    {
+        "buySellIndicator": "B",
+        "packetSequence": 8,
+        "price": 150,
+        "quantity": 25,
+        "symbol": "MSFT"
+    },
+    {
+        "buySellIndicator": "S",
+        "packetSequence": 9,
+        "price": 155,
+        "quantity": 15,
+        "symbol": "MSFT"
+    },
+    {
+        "buySellIndicator": "B",
+        "packetSequence": 10,
+        "price": 148,
+        "quantity": 20,
+        "symbol": "MSFT"
+    },
+    {
+        "buySellIndicator": "B",
+        "packetSequence": 11,
+        "price": 3000,
+        "quantity": 10,
+        "symbol": "AMZN"
+    },
+    {
+        "buySellIndicator": "B",
+        "packetSequence": 12,
+        "price": 2999,
+        "quantity": 5,
+        "symbol": "AMZN"
+    },
+    {
+        "buySellIndicator": "S",
+        "packetSequence": 13,
+        "price": 3020,
+        "quantity": 15,
+        "symbol": "AMZN"
+    },
+    {
+        "buySellIndicator": "S",
+        "packetSequence": 14,
+        "price": 3015,
+        "quantity": 10,
+        "symbol": "AMZN"
+    }
+]

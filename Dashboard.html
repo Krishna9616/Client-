@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #e9e9e9;
+        }
+        .summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #eef;
+            border-left: 5px solid #36c;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fee;
+            border-left: 5px solid #c33;
+        }
+        .timestamp {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .buy {
+            color: green;
+            font-weight: bold;
+        }
+        .sell {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Client Data Dashboard</h1>
+        <div class="timestamp" id="dataTimestamp">Data last generated: N/A</div>
+        
+        <div id="summaryStats" class="summary" style="display:none;">
+            <h2>Summary</h2>
+            <p>Total Packets Received: <span id="totalPackets">0</span></p>
+            <p>Highest Sequence Number: <span id="highestSequence">0</span></p>
+            <p>Buy Orders: <span id="buyOrders">0</span></p>
+            <p>Sell Orders: <span id="sellOrders">0</span></p>
+            <p>Unique Symbols: <span id="uniqueSymbols">0</span> (<span id="symbolList"></span>)</p>
+        </div>
+
+        <h2>Packet Data</h2>
+        <div id="packetTableContainer">
+            <p>Loading data or no data found (run C++ client to generate <code>packets.json</code>)...</p>
+        </div>
+        <div id="errorMessage" class="error" style="display:none;"></div>
+    </div>
+
+    <script>
+        async function loadPacketData() {
+            const packetTableContainer = document.getElementById('packetTableContainer');
+            const errorMessageDiv = document.getElementById('errorMessage');
+            const summaryDiv = document.getElementById('summaryStats');
+            const dataTimestampDiv = document.getElementById('dataTimestamp');
+
+            try {
+                const response = await fetch('packets.json', { cache: "no-cache" });
+                
+                if (!response.ok) {
+                    let errorMsg = `Error loading packets.json: ${response.status} ${response.statusText}`;
+                    if (response.status === 404) {
+                        errorMsg += `<br>Please ensure the C++ client has run successfully and generated the JSON file in the same directory as this HTML file.`;
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                const packets = await response.json();
+                const fileLastModified = response.headers.get('last-modified');
+                if (fileLastModified) {
+                    dataTimestampDiv.textContent = `Data from: ${new Date(fileLastModified).toLocaleString()}`;
+                } else {
+                    dataTimestampDiv.textContent = `Data from: ${new Date().toLocaleString()} (timestamp from JSON unavailable)`;
+                }
+
+
+                if (packets && packets.length > 0) {
+                    packetTableContainer.innerHTML = ''; 
+                    const table = document.createElement('table');
+                    const thead = document.createElement('thead');
+                    const tbody = document.createElement('tbody');
+
+
+                    const headerRow = document.createElement('tr');
+                    const headers = ['Seq', 'Symbol', 'Buy/Sell', 'Quantity', 'Price'];
+                    headers.forEach(headerText => {
+                        const th = document.createElement('th');
+                        th.textContent = headerText;
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+                    let buyCount = 0;
+                    let sellCount = 0;
+                    let maxSeq = 0;
+                    const symbols = new Set();
+
+                    packets.forEach(packet => {
+                        const row = document.createElement('tr');
+                        
+                        const seqCell = document.createElement('td');
+                        seqCell.textContent = packet.packetSequence;
+                        row.appendChild(seqCell);
+
+                        const symbolCell = document.createElement('td');
+                        symbolCell.textContent = packet.symbol;
+                        row.appendChild(symbolCell);
+                        symbols.add(packet.symbol);
+
+                        const bsCell = document.createElement('td');
+                        bsCell.textContent = packet.buySellIndicator;
+                        if (packet.buySellIndicator === 'B') {
+                            bsCell.classList.add('buy');
+                            buyCount++;
+                        } else if (packet.buySellIndicator === 'S') {
+                            bsCell.classList.add('sell');
+                            sellCount++;
+                        }
+                        row.appendChild(bsCell);
+                        
+                        const qtyCell = document.createElement('td');
+                        qtyCell.textContent = packet.quantity;
+                        row.appendChild(qtyCell);
+
+                        const priceCell = document.createElement('td');
+                        priceCell.textContent = packet.price;
+                        row.appendChild(priceCell);
+
+                        tbody.appendChild(row);
+
+                        if (packet.packetSequence > maxSeq) {
+                            maxSeq = packet.packetSequence;
+                        }
+                    });
+                    table.appendChild(tbody);
+                    packetTableContainer.appendChild(table);
+                    document.getElementById('totalPackets').textContent = packets.length;
+                    document.getElementById('highestSequence').textContent = maxSeq;
+                    document.getElementById('buyOrders').textContent = buyCount;
+                    document.getElementById('sellOrders').textContent = sellCount;
+                    document.getElementById('uniqueSymbols').textContent = symbols.size;
+                    document.getElementById('symbolList').textContent = Array.from(symbols).join(', ');
+                    summaryDiv.style.display = 'block';
+                    errorMessageDiv.style.display = 'none';
+
+                } else {
+                    packetTableContainer.innerHTML = '<p><code>packets.json</code> is empty or not in the expected format.</p>';
+                    summaryDiv.style.display = 'none';
+                }
+
+            } catch (error) {
+                console.error('Failed to load or parse packet data:', error);
+                errorMessageDiv.innerHTML = `Error: ${error.message}`;
+                errorMessageDiv.style.display = 'block';
+                packetTableContainer.innerHTML = '<p>Could not load data. See error message above.</p>';
+                summaryDiv.style.display = 'none';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', loadPacketData);
+    </script>
+</body>
+</html>
