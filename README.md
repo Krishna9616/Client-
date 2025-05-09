@@ -23,17 +23,17 @@ This project is a C++ client that connects to the ABX mock exchange server over 
 
 ### Run ABX Exchange Server
 
-1.Start the server:
+## Start the server:
    Go to the file where project is stored and open command prompt run the code : node main.js
-2.For Windows: go to the file where project is stored and open command prompt run the code :
-   g++ client.cpp -o client.exe -lws2_32 
-   it will compile the client.cpp code.
-   again run this code : client.exe  
-   it will generate a packet.json file which contain the received packet from the server.
+## For Windows: go to the file where project is stored and open command prompt run the code :
+   - g++ client.cpp -o client.exe -lws2_32 
+   - it will compile the client.cpp code.
+   - again run this code : client.exe  
+   - it will generate a packet.json file which contain the received packet from the server.
 
-3.For Linux: go to the file where project is stored and open command prompt run the code :
-   g++ client.cpp -o client -std=c++11
-   it will compile the client.cpp code.
-   again run this code : ./abx_client  
-   it will generate a packet.json file which contain the received packet from the server.
+## For Linux: go to the file where project is stored and open command prompt run the code :
+   - g++ client.cpp -o client -std=c++11
+   - it will compile the client.cpp code.
+   - again run this code : ./abx_client  
+   - it will generate a packet.json file which contain the received packet from the server.
 
